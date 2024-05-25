@@ -3,6 +3,9 @@ from typing import Any, Literal, TypedDict
 import requests
 from requests.structures import CaseInsensitiveDict
 
+from .abstract_client import Client
+from youtrackpy.models import YoutrackProject
+
 
 class Response(TypedDict):
     body: Any
@@ -11,7 +14,7 @@ class Response(TypedDict):
     status: int
 
 
-class YoutrackClient:
+class YoutrackClient(Client):
 
     DEFAULT_SCHEME = "https"
 
@@ -38,7 +41,23 @@ class YoutrackClient:
         host = f"{self.__host}:{self.__port}"
         return f"YoutrackClient(host='{host}')"
 
+    def __getattr__(self, name: str):
+        return self.__getitem__(name)
+
+    def __getitem__(self, name: str):
+        return YoutrackProject(self, name)
+
     def get(
+        self,
+        endpoint: str,
+        query: dict[str, Any] | None = None,
+        fields: list[str] | None = None,
+        limit: int = 0,
+        skip: int = 0,
+    ) -> Response:
+        return self._get(endpoint, query, fields, limit, skip)
+
+    def _get(
         self,
         endpoint: str,
         query: dict[str, Any] | None = None,
