@@ -95,7 +95,7 @@ class YoutrackClient(Client):
         if self._projects is not None:
             return self._projects
 
-        INITIAL_PROJECT_FIELDS = ["id", "name", "shortName"]
+        INITIAL_PROJECT_FIELDS = ["name", "shortName"]
 
         response = self.get(endpoint=PROJECT_ENDPOINT, fields=INITIAL_PROJECT_FIELDS)
 
@@ -105,7 +105,6 @@ class YoutrackClient(Client):
         self._projects = [
             Project(
                 _client=self,
-                id=project["id"],
                 name=project["name"],
                 shortName=project["shortName"],
             )
