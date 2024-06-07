@@ -1,46 +1,52 @@
-from typing import Any
 from youtrackpy.client import Client
 
 
-class YoutrackProject:
+from dataclasses import dataclass
 
-    INITIAL_PROJECT_FIELDS = [
-        "id",
-        "archived",
-        "createdBy",
-        # TODO: create customField models to format response depending of which customField type
-        "customFields(id,bundle(values(name)),defaultValues(name),field(name),project,canBeEmpty,emptyFieldText,ordinal,isPublic,hasRunningJob,condition)",
-        "description",
-        "fromEmail",
-        "iconUrl",
-        "issues",
-        "leader",
-        "name",
-        "replyToEmail",
-        "shortName",
-        "team",
-        "template",
-    ]
+INITIAL_PROJECT_FIELDS = ["id", "name", "shortName"]
+PROJECT_ENDPOINT = "admin/projects"
+PROJECT_FIELDS = [
+    "id",
+    "archived",
+    "createdBy",
+    "customFields(id,bundle(values(name)),defaultValues(name),field(name),canBeEmpty,emptyFieldText,ordinal,isPublic,hasRunningJob,condition)",
+    "description",
+    "fromEmail",
+    "iconUrl",
+    "issues",
+    "leader",
+    "name",
+    "replyToEmail",
+    "shortName",
+    "team",
+    "template",
+]
 
-    def __init__(self, client: Client, short_name: str) -> None:
-        self._client = client
-        self._short_name = short_name
+
+# TODO: create User, ProjectCustomField and Issue Models
+@dataclass
+class Project:
+    _client: Client
+    shortName: str
+    name: str | None = None
+    id: str | None = None
+    archived: bool | None = None
+    # createdBy: User | None = None
+    # customFields: ProjectCustomField | None = None
+    description: str | None = None
+    fromEmail: str | None = None
+    iconUrl: str | None = None
+    # issues: list[Issue] | None = None
+    # leader: User | None = None
+    replyToEmail: str | None = None
+    startingNumber: int | None = None
+    # team: list[User] | None = None
+    template: bool | None = None
 
     def __repr__(self) -> str:
-        return f"YoutrackProject({self._client!r}, {self._short_name!r})"
+        if self.name is None:
+            return f"Project({self._client!r},shortName={self.shortName!r})"
 
-    def get_info(self, fields: list[str] | None = None) -> dict[str, Any]:
-
-        if fields is None:
-            fields = self.INITIAL_PROJECT_FIELDS
-
-        project = self._client.get(
-            endpoint=f"admin/projects/{self._short_name}",
-            fields=fields,
+        return (
+            f"Project({self._client!r},name={self.name!r},shortName={self.shortName!r})"
         )
-
-        if project["status"] != 200:
-            # raise ValueError(f"Project {self._short_name.upper()} does not exist")
-            return {}
-
-        return project["body"]

@@ -3,8 +3,9 @@ from typing import Any, Literal, TypedDict
 import requests
 from requests.structures import CaseInsensitiveDict
 
+from youtrackpy.models import PROJECT_ENDPOINT, Project
+
 from .abstract_client import Client
-from youtrackpy.models import YoutrackProject
 
 
 class Response(TypedDict):
@@ -37,6 +38,8 @@ class YoutrackClient(Client):
         }
         self._verify = not disable_ssl_certificate_validation
 
+        self._projects = None
+
     def __repr__(self) -> str:
         host = f"{self.__host}:{self.__port}"
         return f"YoutrackClient(host='{host}')"
@@ -45,7 +48,7 @@ class YoutrackClient(Client):
         return self.__getitem__(name)
 
     def __getitem__(self, name: str):
-        return YoutrackProject(self, name)
+        return Project(self, name)
 
     def get(
         self,
@@ -65,18 +68,7 @@ class YoutrackClient(Client):
         limit: int = 0,
         skip: int = 0,
     ) -> Response:
-        """
-        GET HTTP Method
 
-        Parameters
-        ----------
-        endpoint: str
-            endpoint to do the http request
-        query: dict[str, Any] | None (default `None`)
-        fields: list[str] | None (default `None`)
-        limit: int (default `0`)
-        skip: int (default `0`)
-        """
         endpoint = f"{self._base_url}/{endpoint}"
         if fields is not None:
             endpoint = f"{endpoint}?fields={','.join(fields)}"
@@ -89,3 +81,35 @@ class YoutrackClient(Client):
             "reason": response.reason,
             "status": response.status_code,
         }
+
+    @property
+    def projects(self) -> list[Project]:
+        """
+        Retrieve a list of projects
+
+        Return
+        ------
+         - list[Project(name,shortName)]
+
+        """
+        if self._projects is not None:
+            return self._projects
+
+        INITIAL_PROJECT_FIELDS = ["id", "name", "shortName"]
+
+        response = self.get(endpoint=PROJECT_ENDPOINT, fields=INITIAL_PROJECT_FIELDS)
+
+        if response["status"] != 200:
+            return []
+
+        self._projects = [
+            Project(
+                _client=self,
+                id=project["id"],
+                name=project["name"],
+                shortName=project["shortName"],
+            )
+            for project in response["body"]
+        ]
+
+        return self._projects
