@@ -3,7 +3,7 @@ from typing import Any, Literal, TypedDict
 import requests
 from requests.structures import CaseInsensitiveDict
 
-from youtrackpy.models import PROJECT_ENDPOINT, Project
+from youtrackpy.resources import PROJECT_ENDPOINT, Project
 
 from .abstract_client import Client
 
