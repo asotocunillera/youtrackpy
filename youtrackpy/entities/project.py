@@ -1,6 +1,8 @@
 from typing import Any
 from dataclasses import asdict, dataclass
 
+from .issue import IssueEntity
+
 
 @dataclass
 class ProjectEntity:
@@ -21,7 +23,7 @@ class ProjectEntity:
     description: str | None = None
     fromEmail: str | None = None
     iconUrl: str | None = None
-    issues: list[Any] | None = None  # TODO change with list[Issue]
+    issues: list[IssueEntity] | None = None  # TODO change with list[Issue]
     leader: Any | None = None  # TODO change with User
     replyToEmail: str | None = None
     startingNumber: int | None = None

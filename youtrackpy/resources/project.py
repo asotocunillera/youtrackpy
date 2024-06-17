@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from youtrackpy.client import Client
-from youtrackpy.entities import ProjectEntity
+from youtrackpy.entities import ProjectEntity, IssueEntity
 
 INITIAL_PROJECT_FIELDS = ["id", "name", "shortName"]
 PROJECT_ENDPOINT = "admin/projects"
@@ -14,7 +14,7 @@ PROJECT_FIELDS = [
     "description",
     "fromEmail",
     "iconUrl",
-    "issues",
+    "issues(idReadable)",
     "leader",
     "name",
     "replyToEmail",
@@ -41,24 +41,26 @@ class Project:
         )
 
     @property
-    def info(self) -> dict[str, Any]:
+    def info(self) -> ProjectEntity:
 
         if self._info is not None:
-            return self._info.dict()
+            return self._info
 
         project = self._client.get(
             endpoint=f"{PROJECT_ENDPOINT}/{self.shortName}",
             fields=PROJECT_FIELDS,
+            limit=0,
         )
 
         if project["status"] != 200:
-            return {}
+            # TODO: if error return something different
+            return ProjectEntity(shortName=self.shortName)
 
         project = project["body"]
 
         self._info = self.__update_info(project)
 
-        return self._info.dict()
+        return self._info
 
     def __update_info(self, project_info: dict[str, Any]) -> ProjectEntity:
         # TODO add rest of values
@@ -72,10 +74,23 @@ class Project:
             description=project_info.get("description"),
             fromEmail=project_info.get("fromEmail"),
             iconUrl=project_info.get("iconUrl"),
-            issues=project_info.get("issues"),
+            issues=self._save_issues(project_info.get("issues")),
             leader=project_info.get("leader"),
             replyToEmail=project_info.get("replyToEmail"),
             startingNumber=project_info.get("startingNumber"),
             team=project_info.get("team"),
             template=project_info.get("template"),
         )
+
+    def _save_issues(self, issues: list[dict[str, Any]] | None) -> list[IssueEntity]:
+        if issues is None:
+            return []
+
+        return [
+            IssueEntity(
+                idReadable=issue.get(
+                    "idReadable", "Not found"
+                ),  # TODO: idReadable always must be in issue
+            )
+            for issue in issues
+        ]

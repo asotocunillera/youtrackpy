@@ -12,33 +12,36 @@ class IssueEntity:
 
     """
 
-    id: str
-    attachments: list[Any]  # TODO: change Any with IssueAttachments
-    comments: list[Any]  # TODO change Any with IssueComments
-    commentsCount: int
-    created: int
-    customFields: list[Any]  # TODO: change Any with IssueCustomFields
-    description: str
-    draftOwner: Any  # TODO: change Any with User
-    externalIssue: Any  # TODO: change Any with ExternalIssue
     idReadable: str
-    isDraft: bool
-    links: list[Any]  # TODO: change Any with IssueLink
-    numberInProject: int
-    parent: Any  # TODO change Any with IssueLink
-    pinnedComments: list[Any]  # TODO change Any with IssueComment
-    project: Any  # TODO: change Any with Project
-    reporter: Any  # TODO: change Any with User
-    resolved: int
-    subtasks: Any  # TODO: change Any with IssueLink
-    summary: str
-    tags: list[Any]  # TODO: change Any with Tag
-    updated: int
-    updater: Any  # TODO: change Any with User
-    visibility: Any  # TODO: change Any with Visibility
-    voters: list[Any]  # TODO: change Any with IssueVoter
-    votes: int
-    watchers: list[Any]  # TODO: change Any with IssueWatcher
-    wikifiedDescription: str
+    id: str | None = None
+    attachments: list[Any] | None = None  # TODO: change Any with IssueAttachments
+    comments: list[Any] | None = None  # TODO change Any with IssueComments
+    commentsCount: int | None = None
+    created: int | None = None
+    customFields: list[Any] | None = None  # TODO: change Any with IssueCustomFields
+    description: str | None = None
+    draftOwner: Any | None = None  # TODO: change Any with User
+    externalIssue: Any | None = None  # TODO: change Any with ExternalIssue
+    isDraft: bool | None = None
+    links: list[Any] | None = None  # TODO: change Any with IssueLink
+    numberInProject: int | None = None
+    parent: Any | None = None  # TODO change Any with IssueLink
+    pinnedComments: list[Any] | None = None  # TODO change Any with IssueComment
+    project: Any | None = None  # TODO: change Any with Project
+    reporter: Any | None = None  # TODO: change Any with User
+    resolved: int | None = None
+    subtasks: Any | None = None  # TODO: change Any with IssueLink
+    summary: str | None = None
+    tags: list[Any] | None = None  # TODO: change Any with Tag
+    updated: int | None = None
+    updater: Any | None = None  # TODO: change Any with User
+    visibility: Any | None = None  # TODO: change Any with Visibility
+    voters: list[Any] | None = None  # TODO: change Any with IssueVoter
+    votes: int | None = None
+    watchers: list[Any] | None = None  # TODO: change Any with IssueWatcher
+    wikifiedDescription: str | None = None
 
     dict = asdict
+
+    def __repr__(self):
+        return f"IssueEntity(idReadable={self.idReadable!r})"
