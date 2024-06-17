@@ -1,4 +1,4 @@
-from typing import Any, Literal, TypedDict 
+from typing import Any, Literal, TypedDict
 
 import requests
 from requests.structures import CaseInsensitiveDict
