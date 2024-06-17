@@ -26,12 +26,10 @@ class Project:
             f"Project({self._client!r},name={self.name!r},shortName={self.shortName!r})"
         )
 
-    @property
-    def info(self) -> ProjectEntity:
+    def get_info(self) -> ProjectEntity:
 
         project = self._client.get(
             endpoint=f"{PROJECT_ENDPOINT}/{self.shortName}",
-            # fields=PROJECT_FIELDS,
             fields=self.fields,
             limit=0,
         )
