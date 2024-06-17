@@ -1,11 +1,9 @@
-from typing import Any, Literal, TypedDict
+from typing import Any, Literal, TypedDict 
 
 import requests
 from requests.structures import CaseInsensitiveDict
 
-from youtrackpy.resources import PROJECT_ENDPOINT, Project
-
-from .abstract_client import Client
+from youtrackpy.resources import Project, PROJECT_ENDPOINT
 
 
 class Response(TypedDict):
@@ -15,7 +13,7 @@ class Response(TypedDict):
     status: int
 
 
-class YoutrackClient(Client):
+class YoutrackClient():
 
     DEFAULT_SCHEME = "https"
 

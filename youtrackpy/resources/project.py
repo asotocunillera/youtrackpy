@@ -1,8 +1,13 @@
+from __future__ import annotations
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
-from youtrackpy.client import Client
-from youtrackpy.entities import ProjectEntity, IssueEntity
+from youtrackpy.entities import IssueEntity, ProjectEntity
+
+
+if TYPE_CHECKING:
+    from youtrackpy.client import YoutrackClient
+
 
 INITIAL_PROJECT_FIELDS = ["id", "name", "shortName"]
 PROJECT_ENDPOINT = "admin/projects"
@@ -27,7 +32,7 @@ PROJECT_FIELDS = [
 # TODO: create User, ProjectCustomField and Issue Models
 @dataclass
 class Project:
-    _client: Client
+    _client: YoutrackClient
     shortName: str
     name: str | None = None
 

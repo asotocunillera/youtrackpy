@@ -1,8 +1,4 @@
-from .project import INITIAL_PROJECT_FIELDS, PROJECT_ENDPOINT, Project
+from .project import PROJECT_ENDPOINT, Project
 
 
-__all__ = [
-    "INITIAL_PROJECT_FIELDS",
-    "PROJECT_ENDPOINT",
-    "Project",
-]
+__all__ = ["PROJECT_ENDPOINT", "Project"]
